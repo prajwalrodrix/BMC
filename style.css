@@ -275,31 +275,31 @@ body {
 /* Tablet view */
 @media screen and (max-width: 1024px) {
   .hero {
-    padding: 4rem 2rem;
+    padding: 4rem 1.5rem;
     min-height: 70vh;
   }
 
   .hero-content {
-    margin-left: 2rem;
+    margin-left: 1rem;
     max-width: 90%;
   }
 
-    .hero-content p {
-    font-size: 1rem;
-    margin-right: 0px;
+  .hero-content h1 {
+    font-size: 2.5rem;
   }
 
-
-  .hero-content h1 {
-    font-size: 3rem;
+  .hero-content p {
+    font-size: 1rem;
+    margin-left: -12px;
   }
 
   .hero-top-image {
-    top: 280px;
-    right: 0px;
-    width: 400px;
+    top: 320px;
+    right: 0;
+    width: 350px;
   }
 }
+
 
 
 
