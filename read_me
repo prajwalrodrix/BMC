@@ -1,0 +1,30 @@
+# Project Title
+
+A brief description of what your project does and who it's for.
+
+## 🚀 Features
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+## 🛠️ Tech Stack
+
+- Language: (e.g., JavaScript, Python, etc.)
+- Framework: (e.g., React, Node.js, Django)
+- Tools: (e.g., Git, Docker, Vite, etc.)
+
+## 📦 Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/your-username/your-repo-name.git
+
+# Go into the project folder
+cd your-repo-name
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
