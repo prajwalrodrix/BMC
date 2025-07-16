@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BMC Retirement Benefit Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-...">
+
+
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: rgba(255, 255, 255, 0.9);
+      --border: #cbd5e1;
+      --text: #0f172a;
+      --accent: #10b981;
+      --primary: #0077ff;
+      --danger: #ef4444;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+/* Body Styling */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f2f7f7;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+
+/* Navbar Layout */
+.navbar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 64px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e5e5e5;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  border-radius: 0 0 12px 12px;
+}
+
+/* Optional: Add hover effect for sticky navbar */
+.navbar-wrapper:hover {
+  box-shadow: 0 4px 20px rgba(27, 94, 32, 0.3); /* Green shadow */
+}
+
+
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #000; /* dark text to contrast with white background */
+  letter-spacing: 0.5px;
+}
+
+/* Hamburger */
+#menuToggle {
+  display: none;
+}
+
+.menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  z-index: 1101;
+}
+
+.menu-line {
+  width: 25px;
+  height: 3px;
+  background: #000; /* dark lines for white navbar */
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+#menuToggle:checked + .menu-btn .menu-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+#menuToggle:checked + .menu-btn .menu-line:nth-child(2) {
+  opacity: 0;
+}
+#menuToggle:checked + .menu-btn .menu-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.nav-container {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin-left: -220px;
+}
+
+.nav-links a {
+  color: #000; /* dark text for links */
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #1b5e20;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+  .menu-btn {
+    display: flex;
+  }
+
+  .navbar-wrapper {
+    padding: 0 20px;
+  }
+
+.nav-container {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 75%;
+  max-width: 320px;
+  height: 100vh;
+  background: #ffffff;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 80px 24px;
+  transition: right 0.3s ease;
+  z-index: 1001;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+  border-left: 1px solid #eee;
+  border-radius: 12px 0 0 12px;
+}
+
+
+  #menuToggle:checked ~ .nav-container {
+    right: 0;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 10px;
+  }
+
+  .nav-links a {
+    font-size: 1.1rem;
+    padding: 10px 0;
+    width: 100%;
+    display: block;
+    color: black;
+  }
+
+  .blur-overlay {
+    display: none;
+  }
+
+  #menuToggle:checked ~ .blur-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+  }
+}
+
+  .bmc {
+      text-align: center;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      margin-top: 5rem;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+      box-shadow: 0 20px 40px var(--shadow);
+      backdrop-filter: blur(10px);
+      transition: background 0.3s, box-shadow .3s;
+      margin-bottom: 75px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 1.75rem;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 1rem 0.75rem 0.5rem;
+      border: 2px solid var(--border);
+      border-radius: 0.75rem;
+      font-size: 16px;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 1rem;
+      left: 0.75rem;
+      font-size: 15px;
+      color: var(--text);
+      pointer-events: none;
+      transition: .2s ease;
+      background: var(--card);
+      padding: 0 4px;
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label,
+    .input-group select:focus + label,
+    .input-group select:not(:placeholder-shown) + label {
+      top: -0.6rem;
+      left: 0.6rem;
+      font-size: 12px;
+      color: var(--primary);
+    }
+
+    button {
+      width: 100%;
+      padding: 0.85rem;
+      background-color: var(--accent);
+      border: none;
+      border-radius: 0.75rem;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 1.25rem;
+      transition: background .3s ease;
+    }
+
+    button:hover {
+      background-color: #059669;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      display: none;
+      animation: fadeIn 0.5s ease-in-out forwards;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 15px;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    td {
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        padding: 1.5rem;
+        max-width: 340px;
+        margin-bottom: 30px;
+      }
+
+      .bmc {
+        font-size: 1rem;
+      }
+    }
+
+
+.pro-footer {
+  background-color: #1b5e20;
+  color: #fff;
+  padding: 4rem 2rem 2rem;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-column h2,
+.footer-column h3 {
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.footer-column p,
+.footer-column ul,
+.footer-column li {
+  font-size: 0.95rem;
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-column li a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-column li a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-column.contact li i {
+  margin-right: 8px;
+  color: #fff;
+}
+
+.social-icons {
+  display: flex;
+  gap: 12px;
+}
+
+.social-icons a {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1rem;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  background: #fff;
+  color: #1b5e20;
+  transform: scale(1.1);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 3rem;
+  padding-top: 1rem;
+  text-align: center;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .footer-column.contact li {
+    display: flex;
+    align-items: center;
+  }
+}
+
+
+.header-container {
+  margin-top: 5rem;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center horizontally */
+  gap: 0.75rem;
+  text-align: center;
+}
+
+
+
+/* ➋ Remove previous extra top‑margin on heading */
+h1.bmc{
+  margin:0;                /* kills the old 5 rem you set earlier */
+  flex:1 1 auto;           /* lets it grow/shrink, pushes share btn right */
+  font-size: 2.25rem;
+}
+
+/* ➌ Keep the share button from shrinking */
+.share-container {
+  flex-shrink: 0;
+  margin-left: 25rem; /* Shifts the share button to the right */
+}
+
+
+    /* Share Button */
+.share-button {
+  background: transparent;
+  border: none;
+  color: black;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.share-button:hover {
+  background-color: transparent;
+}
+
+
+    .share-icon {
+      margin-left: 8px;
+    }
+
+    /* Share Options Dropdown */
+    .share-options {
+      background: #fff;
+      display: none;
+      position: absolute;
+      top: 150px;
+      right: 380px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      flex-direction: column;
+      min-width: 150px;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .share-options a,
+    .share-options button {
+      padding: 12px;
+      font-size: 14px;
+      text-align: left;
+      border: none;
+      background: none;
+      color: #333;
+      width: 100%;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+
+    .share-options.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+  .header-container{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .share-container{align-self:stretch;
+}
+
+
+/* ➌ Keep the share button from shrinking */
+.share-container {
+  flex-shrink: 0;
+  margin-left: 16rem; /* Shifts the share button to the right */
+}
+
+    /* Share Options Dropdown */
+    .share-options {
+      display: none;
+      position: absolute;
+      top: 160px;
+      right: 10px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      flex-direction: column;
+      min-width: 150px;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+
+    /* Share Button */
+    .share-button {
+      border: none;
+      color: black;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+
+
+      .share-options {
+        min-width: 130px;
+      }
+    }
+@media screen and (max-width: 768px) {
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header-container {
+    align-items: center; /* center heading and share on mobile */
+    text-align: center;
+  }
+
+h1.bmc{
+  margin:0;                /* kills the old 5 rem you set earlier */
+  flex:1 1 auto;           /* lets it grow/shrink, pushes share btn right */
+  font-size: 1.5rem;
+}
+
+}
+
+
+
+  </style>
+</head>
+<body>
+
+
+
+
+
+<nav class="navbar-wrapper">
+  <h1 class="logo">
+  <a href="../index.html" style="color: #000; text-decoration: none;">BMC Employee Solution</a>
+</h1>
+
+
+  <input type="checkbox" id="menuToggle" hidden />
+
+  <label for="menuToggle" class="menu-btn">
+    <span class="menu-line"></span>
+    <span class="menu-line"></span>
+    <span class="menu-line"></span>
+  </label>
+
+  <div class="nav-container">
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+
+  <div class="blur-overlay"></div>
+</nav>
+
+<script>
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('menuToggle').checked = false;
+    });
+  });
+</script>
+
+  <div class="header-container">
+    <h1 class="bmc">BMC Increment Calculator</h1>
+    <div class="share-container">
+      <button class="share-button" onclick="toggleShareOptions()">
+        Share‎ ‎ ‎ 
+        <i class="fa-solid fa-share"></i>
+      </button>
+      <div class="share-options" id="shareOptions">
+        <a href="https://wa.me/?text=Check%20this%20out:%20file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html" target="_blank">WhatsApp</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html" target="_blank">Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url=file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html&text=Check%20this%20out!" target="_blank">X (Twitter)</a>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://hoodplex.com/blog/post/what-is-hoodplex.html&title=What%20Is%20Hoodplex" target="_blank">LinkedIn</a>
+        <a href="mailto:?subject=Check%20this%20out!&body=file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html" target="_blank">Email</a>
+        <button onclick="copyLink()">Copy Link</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    function toggleShareOptions() {
+      const shareOptions = document.getElementById('shareOptions');
+      if (shareOptions.classList.contains('show')) {
+        shareOptions.classList.remove('show');
+        setTimeout(() => { shareOptions.style.display = 'none'; }, 300);
+      } else {
+        shareOptions.style.display = 'flex';
+        setTimeout(() => { shareOptions.classList.add('show'); }, 10);
+      }
+    }
+
+    document.addEventListener('click', function(event) {
+      const shareButton = document.querySelector('.share-button');
+      const shareOptions = document.getElementById('shareOptions');
+      if (!shareButton.contains(event.target) && !shareOptions.contains(event.target)) {
+        shareOptions.classList.remove('show');
+        setTimeout(() => { shareOptions.style.display = 'none'; }, 300);
+      }
+    });
+
+    function copyLink() {
+      navigator.clipboard.writeText('file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html')
+        .then(() => {
+          const copyButton = document.querySelector('.share-options button');
+          copyButton.textContent = 'Link Copied';
+          copyButton.disabled = true;
+          setTimeout(() => {
+            copyButton.textContent = 'Copy Link';
+            copyButton.disabled = false;
+          }, 2000);
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err);
+        });
+    }
+
+    function calculateUDT() {
+      const basicPay = parseFloat(document.getElementById('basicPay').value);
+      const daPercent = parseFloat(document.getElementById('daPercent').value);
+      const dutyHours = parseFloat(document.getElementById('dutyHours').value);
+
+      if (isNaN(basicPay) || isNaN(daPercent) || isNaN(dutyHours)) {
+        alert("Please enter all values correctly.");
+        return;
+      }
+
+      const daAmount = basicPay * daPercent;
+      const totalSalary = basicPay + daAmount;
+      const perMinute = totalSalary / (dutyHours * 60 * 30);
+
+      document.getElementById('valBasicPay').textContent = `₹${basicPay.toFixed(2)}`;
+      document.getElementById('valDAAmount').textContent = `₹${daAmount.toFixed(2)}`;
+      document.getElementById('valTotalSalary').textContent = `₹${totalSalary.toFixed(2)}`;
+      document.getElementById('valPerMinute').textContent = `₹${perMinute.toFixed(2)}`;
+    }
+  </script>
+
+  <div class="container">
+
+    <div class="input-group">
+      <input type="number" id="basicPay" placeholder=" " />
+      <label for="basicPay">Current Basic Pay:</label>
+    </div>
+
+    <div class="input-group">
+      <select id="daPercent">
+        <option value="">Select DA %</option>
+        <option value="50">50%</option>
+        <option value="55">55%</option>
+        <option value="60">60%</option>
+        <!-- Add more if needed -->
+      </select>
+      <label for="daPercent">DA %:</label>
+    </div>
+
+    <button onclick="calculateSalary()">Calculate</button>
+
+    <!-- Result Table 1 -->
+    <table id="resultTable1"></table>
+
+    <!-- (Optional) Result Table 2, hidden by default -->
+    <table id="resultTable2"></table>
+
+  </div>
+
+  <script>
+    function calculateSalary() {
+      const basicPay = parseFloat(document.getElementById("basicPay").value);
+      const daPercent = parseFloat(document.getElementById("daPercent").value);
+
+      if (isNaN(basicPay) || isNaN(daPercent) || basicPay <= 0) {
+        alert("Please enter valid Basic Pay and DA Percentage.");
+        return;
+      }
+
+      // New basic pay (assumed fixed increase of 500 like image)
+      const newBasicPay = basicPay + 500;
+
+      // DA calculation
+      const daCurrent = Math.round(basicPay * (daPercent / 100));
+      const daNew = Math.round(newBasicPay * (daPercent / 100));
+      const daIncrease = daNew - daCurrent;
+
+      // HRA calculation (assumed fixed increase of 150 like image)
+      const hraCurrent = 4560;
+      const hraNew = hraCurrent + 150;
+
+      // TA remains same
+      const ta = 1000;
+
+      // Totals
+      const totalCurrent = basicPay + daCurrent + hraCurrent + ta;
+      const totalNew = newBasicPay + daNew + hraNew + ta;
+      const totalIncrease = totalNew - totalCurrent;
+
+      // Fill table values
+      const createRow = (name, curr, newVal, diff) =>
+        `<tr>
+          <td>${name}</td>
+          <td>${curr}</td>
+          <td>${newVal}</td>
+          <td>${diff}</td>
+        </tr>`;
+
+      const tableHTML = `
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Current Salary</th>
+            <th>New Salary</th>
+            <th>Increase</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${createRow("Basic Pay", basicPay, newBasicPay, 500)}
+          ${createRow("DA", daCurrent, daNew, daIncrease)}
+          ${createRow("HRA", hraCurrent, hraNew, 150)}
+          ${createRow("TA", ta, ta, 0)}
+          <tr style="background:#e0f7fa;font-weight:bold;">
+            <td>Total Salary</td>
+            <td>${totalCurrent}</td>
+            <td>${totalNew}</td>
+            <td>${totalIncrease}</td>
+          </tr>
+        </tbody>
+      `;
+
+      let resultTable = document.getElementById("resultTable1");
+      resultTable.innerHTML = tableHTML;
+      resultTable.style.display = "table";
+
+      document.getElementById("resultTable2").style.display = "none";
+
+      setTimeout(() => {
+        resultTable.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  </script>
+
+
+
+<!-- Blog + Sidebar Container -->
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 2rem; font-family: 'Inter', sans-serif;">
+
+  <!-- Blog Section Left -->
+  <section class="bmc-blog" style="flex: 1 1 600px; line-height: 1.8;">
+    <h1 style="font-size: 2.5rem; color: #0d47a1; margin-bottom: 1rem;">Unified Daily Total: A Complete Guide for 2025</h1>
+
+    <p>The Unified Daily Total (UDT) is a smart financial metric designed to track and consolidate your daily income and expenses into one comprehensive figure. This system empowers individuals and businesses to monitor real-time cash flow, spending habits, and trends more efficiently. Here's how it works and why it matters in 2025.</p>
+
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">What is Unified Daily Total?</h2>
+    <p>Unified Daily Total (UDT) combines your total earnings and expenses each day to provide a clear snapshot of your net daily financial position. It's used for budgeting, forecasting, and improving overall financial health.</p>
+
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">How UDT Works</h2>
+    <ul style="padding-left: 1.25rem;">
+      <li>UDT adds up all your <strong>inflows and outflows</strong> in a 24-hour window.</li>
+      <li>It refreshes automatically <strong>every day</strong> at midnight.</li>
+      <li>UDT reports rely on <strong>real-time transaction data</strong>.</li>
+      <li>It helps identify <strong>spending leaks</strong> and excess earnings or losses.</li>
+    </ul>
+
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">UDT Calculation Schedule</h2>
+    <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: #fff; border-radius: 8px; overflow: hidden;">
+      <thead>
+        <tr style="background: #e3f2fd; font-weight: 600;">
+          <th style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Period</th>
+          <th style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Calculation Time</th>
+          <th style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Report Available</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Daily</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">00:00 AM</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Next Day 6 AM</td>
+        </tr>
+        <tr>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Weekly Summary</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Every Sunday</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Monday 9 AM</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Current UDT Trend (2025)</h2>
+    <div style="background: #fff3cd; padding: 1rem; border-left: 5px solid #ffc107; border-radius: 4px; margin: 1.5rem 0;">
+      As of July 2025, Unified Daily Totals across users show an average positive flow of <strong>₹1,200/day</strong>, indicating strong budgeting discipline. Figures vary by region and income group.
+    </div>
+
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">UDT vs Traditional Budgeting</h2>
+    <p>Here’s how UDT stands out:</p>
+    <ul style="padding-left: 1.25rem;">
+      <li><strong>UDT</strong> – Real-time, automated, daily financial metric.</li>
+      <li><strong>Traditional Budget</strong> – Often monthly and manual with less flexibility.</li>
+    </ul>
+
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">UDT Example</h2>
+    <ul style="padding-left: 1.25rem;">
+      <li><strong>Income Today</strong>: ₹3,000</li>
+      <li><strong>Expenses Today</strong>: ₹1,700</li>
+      <li><strong>UDT</strong>: ₹1,300</li>
+    </ul>
+
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Adjustments & Corrections</h2>
+    <p>If a transaction was missed or duplicated, UDT can be manually corrected via your finance tool or app. Always review the daily statement for discrepancies and tag them properly.</p>
+
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">How to Stay on Track</h2>
+    <ul style="padding-left: 1.25rem;">
+      <li>Use a dedicated UDT app or dashboard</li>
+      <li>Set daily financial goals and limits</li>
+      <li>Enable transaction alerts from your bank or wallet</li>
+      <li>Review your UDT chart every week</li>
+    </ul>
+
+  </section>
+
+  <!-- Sidebar Right -->
+  <aside class="sidebar" style="flex: 0 1 280px; background: #ffffff; border: 1px solid #ddd; border-radius: 10px; padding: 1.5rem; height: fit-content; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <h3 style="font-size: 1.3rem; color: #0d47a1; margin-bottom: 1rem;">Other Calculators</h3>
+    <ul style="list-style: none; padding-left: 0; line-height: 2;">
+      <li><a href="./calculator/pensioners_calculator.html" style="color: #1565c0; text-decoration: none;">Pensioners DA Calculator</a></li>
+      <li><a href="#" style="color: #1565c0; text-decoration: none;">Gratuity Calculator</a></li>
+      <li><a href="#" style="color: #1565c0; text-decoration: none;">Leave Encashment Estimator</a></li>
+      <li><a href="#" style="color: #1565c0; text-decoration: none;">Pension Commutation Tool</a></li>
+      <li><a href="#" style="color: #1565c0; text-decoration: none;">Income Tax Estimator</a></li>
+    </ul>
+  </aside>
+</div>
+
+
+<footer class="pro-footer">
+  <div class="footer-container">
+    <!-- Column 1: Branding -->
+    <div class="footer-column brand">
+      <h2>BMC Employee Solution</h2>
+      <p>Helping BMC employees and pensioners manage their finances with clarity, ease, and trust.</p>
+    </div>
+
+    <!-- Column 2: Navigation -->
+    <div class="footer-column links">
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Calculators</a></li>
+        <li><a href="#">Benefits</a></li>
+        <li><a href="#">Help Center</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 3: Contact -->
+    <div class="footer-column contact">
+      <h3>Contact</h3>
+      <ul>
+        <li><i class="fas fa-envelope"></i> info@bmcemployeesolution.com</li>
+        <li><i class="fas fa-phone-alt"></i> +91-12345-67890</li>
+        <li><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra</li>
+      </ul>
+    </div>
+
+    <!-- Column 4: Social Only -->
+    <div class="footer-column social">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <p>&copy; 2025 BMC Employee Solution. All rights reserved. | Created by Hoodplex</p>
+  </div>
+</footer>
+
+
+
+
+</body>
+</html>
+
