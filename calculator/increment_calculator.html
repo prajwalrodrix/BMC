@@ -265,6 +265,24 @@ body {
       background-color: #059669;
     }
 
+    .table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 1rem;
+}
+
+.table-responsive table {
+  min-width: 500px;
+}
+
+.table-responsive table th,
+.table-responsive table td {
+  font-size: 14px;
+  padding: 0.5rem;
+}
+
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -314,7 +332,7 @@ body {
 
 
 .pro-footer {
-  background-color: #1b5e20;
+  background-color: #00bf63;
   color: #fff;
   padding: 4rem 2rem 2rem;
   font-family: "Segoe UI", sans-serif;
@@ -340,7 +358,7 @@ body {
 .footer-column ul,
 .footer-column li {
   font-size: 0.95rem;
-  color: #ccc;
+  color: #fff;
   line-height: 1.6;
   margin-bottom: 0.5rem;
 }
@@ -351,7 +369,7 @@ body {
 }
 
 .footer-column li a {
-  color: #ccc;
+  color: #fff;
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -392,7 +410,7 @@ body {
   margin-top: 3rem;
   padding-top: 1rem;
   text-align: center;
-  color: #ccc;
+  color: #fff;
   font-size: 0.85rem;
 }
 
@@ -610,11 +628,11 @@ h1.bmc{
         <i class="fa-solid fa-share"></i>
       </button>
       <div class="share-options" id="shareOptions">
-        <a href="https://wa.me/?text=Check%20this%20out:%20file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html" target="_blank">WhatsApp</a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html" target="_blank">Facebook</a>
-        <a href="https://twitter.com/intent/tweet?url=file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html&text=Check%20this%20out!" target="_blank">X (Twitter)</a>
-        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://hoodplex.com/blog/post/what-is-hoodplex.html&title=What%20Is%20Hoodplex" target="_blank">LinkedIn</a>
-        <a href="mailto:?subject=Check%20this%20out!&body=file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html" target="_blank">Email</a>
+        <a href="https://wa.me/?text=Check%20this%20out:%20https://prajwalrodrix.github.io/BMC/calculator/increment_calculator.html" target="_blank">WhatsApp</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://prajwalrodrix.github.io/BMC/calculator/increment_calculator.html" target="_blank">Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url=https://prajwalrodrix.github.io/BMC/calculator/increment_calculator.html&text=Check%20this%20out!" target="_blank">X (Twitter)</a>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://prajwalrodrix.github.io/BMC/calculator/increment_calculator.html" target="_blank">LinkedIn</a>
+        <a href="mailto:?subject=Check%20this%20out!&body=https://prajwalrodrix.github.io/BMC/calculator/increment_calculator.html" target="_blank">Email</a>
         <button onclick="copyLink()">Copy Link</button>
       </div>
     </div>
@@ -643,7 +661,7 @@ h1.bmc{
     });
 
     function copyLink() {
-      navigator.clipboard.writeText('file:///C:/Users/aanch/OneDrive/Desktop/bmc/calculator/udt.html')
+      navigator.clipboard.writeText('https://prajwalrodrix.github.io/BMC/calculator/increment_calculator.html')
         .then(() => {
           const copyButton = document.querySelector('.share-options button');
           copyButton.textContent = 'Link Copied';
@@ -678,9 +696,7 @@ h1.bmc{
       document.getElementById('valPerMinute').textContent = `₹${perMinute.toFixed(2)}`;
     }
   </script>
-
   <div class="container">
-
     <div class="input-group">
       <input type="number" id="basicPay" placeholder=" " />
       <label for="basicPay">Current Basic Pay:</label>
@@ -692,18 +708,34 @@ h1.bmc{
         <option value="50">50%</option>
         <option value="55">55%</option>
         <option value="60">60%</option>
-        <!-- Add more if needed -->
       </select>
       <label for="daPercent">DA %:</label>
     </div>
 
+    <div class="input-group">
+      <select id="taAmount">
+        <option value="">Select TA</option>
+        <option value="5400">₹5400</option>
+        <option value="2700">₹2700</option>
+        <option value="1000">₹1000</option>
+      </select>
+      <label for="taAmount">Transport Allowance (TA)</label>
+    </div>
+
+    <div class="input-group">
+      <select id="hraPercent">
+        <option value="">Select HRA %</option>
+        <option value="30">30%</option>
+      </select>
+      <label for="hraPercent">HRA %</label>
+    </div>
+
     <button onclick="calculateSalary()">Calculate</button>
 
-    <!-- Result Table 1 -->
-    <table id="resultTable1"></table>
-
-    <!-- (Optional) Result Table 2, hidden by default -->
-    <table id="resultTable2"></table>
+<div class="table-responsive">
+  <table id="resultTable1"></table>
+  <table id="resultTable2"></table>
+</div>
 
   </div>
 
@@ -711,33 +743,33 @@ h1.bmc{
     function calculateSalary() {
       const basicPay = parseFloat(document.getElementById("basicPay").value);
       const daPercent = parseFloat(document.getElementById("daPercent").value);
+      const ta = parseFloat(document.getElementById("taAmount").value);
+      const hraPercent = parseFloat(document.getElementById("hraPercent").value);
 
-      if (isNaN(basicPay) || isNaN(daPercent) || basicPay <= 0) {
-        alert("Please enter valid Basic Pay and DA Percentage.");
+      if (
+        isNaN(basicPay) || basicPay <= 0 ||
+        isNaN(daPercent) ||
+        isNaN(ta) ||
+        isNaN(hraPercent)
+      ) {
+        alert("Please fill all values correctly.");
         return;
       }
 
-      // New basic pay (assumed fixed increase of 500 like image)
       const newBasicPay = basicPay + 500;
 
-      // DA calculation
       const daCurrent = Math.round(basicPay * (daPercent / 100));
       const daNew = Math.round(newBasicPay * (daPercent / 100));
       const daIncrease = daNew - daCurrent;
 
-      // HRA calculation (assumed fixed increase of 150 like image)
-      const hraCurrent = 4560;
-      const hraNew = hraCurrent + 150;
+      const hraCurrent = Math.round(basicPay * (hraPercent / 100));
+      const hraNew = Math.round(newBasicPay * (hraPercent / 100));
+      const hraIncrease = hraNew - hraCurrent;
 
-      // TA remains same
-      const ta = 1000;
-
-      // Totals
       const totalCurrent = basicPay + daCurrent + hraCurrent + ta;
       const totalNew = newBasicPay + daNew + hraNew + ta;
       const totalIncrease = totalNew - totalCurrent;
 
-      // Fill table values
       const createRow = (name, curr, newVal, diff) =>
         `<tr>
           <td>${name}</td>
@@ -758,7 +790,7 @@ h1.bmc{
         <tbody>
           ${createRow("Basic Pay", basicPay, newBasicPay, 500)}
           ${createRow("DA", daCurrent, daNew, daIncrease)}
-          ${createRow("HRA", hraCurrent, hraNew, 150)}
+          ${createRow("HRA", hraCurrent, hraNew, hraIncrease)}
           ${createRow("TA", ta, ta, 0)}
           <tr style="background:#e0f7fa;font-weight:bold;">
             <td>Total Salary</td>
@@ -769,10 +801,9 @@ h1.bmc{
         </tbody>
       `;
 
-      let resultTable = document.getElementById("resultTable1");
+      const resultTable = document.getElementById("resultTable1");
       resultTable.innerHTML = tableHTML;
       resultTable.style.display = "table";
-
       document.getElementById("resultTable2").style.display = "none";
 
       setTimeout(() => {
@@ -782,78 +813,77 @@ h1.bmc{
   </script>
 
 
-
 <!-- Blog + Sidebar Container -->
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 2rem; font-family: 'Inter', sans-serif;">
 
   <!-- Blog Section Left -->
   <section class="bmc-blog" style="flex: 1 1 600px; line-height: 1.8;">
-    <h1 style="font-size: 2.5rem; color: #0d47a1; margin-bottom: 1rem;">Unified Daily Total: A Complete Guide for 2025</h1>
+    <h1 style="font-size: 2.5rem; color: #0d47a1; margin-bottom: 1rem;">Increment Calculator: A Complete Guide for 2025</h1>
 
-    <p>The Unified Daily Total (UDT) is a smart financial metric designed to track and consolidate your daily income and expenses into one comprehensive figure. This system empowers individuals and businesses to monitor real-time cash flow, spending habits, and trends more efficiently. Here's how it works and why it matters in 2025.</p>
+    <p>The Increment Calculator is a powerful tool that helps employees and employers estimate salary hikes based on performance, tenure, and inflation trends. It simplifies the process of understanding potential earnings growth and planning financial goals. Here's how it works in 2025 and why it’s important.</p>
 
-    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">What is Unified Daily Total?</h2>
-    <p>Unified Daily Total (UDT) combines your total earnings and expenses each day to provide a clear snapshot of your net daily financial position. It's used for budgeting, forecasting, and improving overall financial health.</p>
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">What is an Increment Calculator?</h2>
+    <p>An Increment Calculator determines your new salary after applying a percentage-based or fixed increment. It offers clarity on post-increment earnings, updated basic pay, and annual hike growth.</p>
 
-    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">How UDT Works</h2>
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">How It Works</h2>
     <ul style="padding-left: 1.25rem;">
-      <li>UDT adds up all your <strong>inflows and outflows</strong> in a 24-hour window.</li>
-      <li>It refreshes automatically <strong>every day</strong> at midnight.</li>
-      <li>UDT reports rely on <strong>real-time transaction data</strong>.</li>
-      <li>It helps identify <strong>spending leaks</strong> and excess earnings or losses.</li>
+      <li>Input your current salary and expected increment percentage.</li>
+      <li>Calculator applies the increment to derive your new salary.</li>
+      <li>Breaks down revised monthly and annual earnings.</li>
+      <li>Useful for salary negotiations and budgeting.</li>
     </ul>
 
-    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">UDT Calculation Schedule</h2>
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Increment Schedule</h2>
     <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: #fff; border-radius: 8px; overflow: hidden;">
       <thead>
         <tr style="background: #e3f2fd; font-weight: 600;">
           <th style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Period</th>
           <th style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Calculation Time</th>
-          <th style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Report Available</th>
+          <th style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Effective From</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Daily</td>
-          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">00:00 AM</td>
-          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Next Day 6 AM</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Annual</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">End of Financial Year</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Next Month's Payroll</td>
         </tr>
         <tr>
-          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Weekly Summary</td>
-          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Every Sunday</td>
-          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Monday 9 AM</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Mid-Year Review</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Every September</td>
+          <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Following October</td>
         </tr>
       </tbody>
     </table>
 
-    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Current UDT Trend (2025)</h2>
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">2025 Increment Trends</h2>
     <div style="background: #fff3cd; padding: 1rem; border-left: 5px solid #ffc107; border-radius: 4px; margin: 1.5rem 0;">
-      As of July 2025, Unified Daily Totals across users show an average positive flow of <strong>₹1,200/day</strong>, indicating strong budgeting discipline. Figures vary by region and income group.
+      As of July 2025, the average increment across industries in India stands at <strong>8.5%</strong>, with IT and consulting sectors showing the highest hikes.
     </div>
 
-    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">UDT vs Traditional Budgeting</h2>
-    <p>Here’s how UDT stands out:</p>
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Increment vs Bonus</h2>
+    <p>Here’s the difference:</p>
     <ul style="padding-left: 1.25rem;">
-      <li><strong>UDT</strong> – Real-time, automated, daily financial metric.</li>
-      <li><strong>Traditional Budget</strong> – Often monthly and manual with less flexibility.</li>
+      <li><strong>Increment</strong> – Permanent increase in basic or gross pay.</li>
+      <li><strong>Bonus</strong> – One-time performance-linked or festive payout.</li>
     </ul>
 
-    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">UDT Example</h2>
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Example Calculation</h2>
     <ul style="padding-left: 1.25rem;">
-      <li><strong>Income Today</strong>: ₹3,000</li>
-      <li><strong>Expenses Today</strong>: ₹1,700</li>
-      <li><strong>UDT</strong>: ₹1,300</li>
+      <li><strong>Current Salary</strong>: ₹40,000</li>
+      <li><strong>Increment</strong>: 10%</li>
+      <li><strong>New Salary</strong>: ₹44,000</li>
     </ul>
 
-    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Adjustments & Corrections</h2>
-    <p>If a transaction was missed or duplicated, UDT can be manually corrected via your finance tool or app. Always review the daily statement for discrepancies and tag them properly.</p>
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Manual Adjustments</h2>
+    <p>If your increment is different from the expected value or includes fixed allowances, you can manually adjust it in the calculator. Always verify increment letters or HR notifications.</p>
 
-    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">How to Stay on Track</h2>
+    <h2 style="font-size: 1.6rem; color: #1565c0; margin-top: 2rem;">Tips to Maximize Increment</h2>
     <ul style="padding-left: 1.25rem;">
-      <li>Use a dedicated UDT app or dashboard</li>
-      <li>Set daily financial goals and limits</li>
-      <li>Enable transaction alerts from your bank or wallet</li>
-      <li>Review your UDT chart every week</li>
+      <li>Maintain a strong performance track record</li>
+      <li>Request feedback before annual reviews</li>
+      <li>Track salary trends in your industry</li>
+      <li>Use the calculator before salary discussions</li>
     </ul>
 
   </section>
@@ -870,6 +900,7 @@ h1.bmc{
     </ul>
   </aside>
 </div>
+
 
 
 <footer class="pro-footer">
